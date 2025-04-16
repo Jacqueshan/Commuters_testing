@@ -70,7 +70,7 @@ function App() {
       {/* Main Content Area */}
       <main className="flex-grow container mx-auto p-4">
         <h2 className="text-xl mb-4">Real-time Transit Map</h2>
-        <MapDisplay />
+        <MapDisplay tripUpdates={subwayStatus?.trip_updates} />
 
         {/* --- Display Fetched Data (Updated) --- */}
         <div className="mt-4 p-4 bg-white rounded shadow">
