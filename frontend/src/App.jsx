@@ -52,7 +52,6 @@ function App() {
   // -----------------------------------------
 
   // --- Component Return (Layout) ---
-  // (We will display the fetched data below in the next step)
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Header Section */}
@@ -64,12 +63,49 @@ function App() {
       <main className="flex-grow container mx-auto p-4">
         <h2 className="text-xl mb-4">Real-time Transit Map</h2>
         <MapDisplay />
-        {/* We'll add data display here in Step 6 */}
+
+        {/* --- Display Fetched Data --- */}
+        <div className="mt-4 p-4 bg-white rounded shadow">
+          <h3 className="text-lg font-semibold mb-2">Feed Status</h3>
+          {/* Show loading message */}
+          {isLoading && <p className="text-gray-500">Loading subway status...</p>}
+
+          {/* Show error message if fetch failed */}
+          {error && <p className="text-red-600">Error fetching status: {error}</p>}
+
+          {/* Show data if loading is finished and there is no error */}
+          {subwayStatus && !isLoading && !error && (
+            <div>
+              <p>
+                <span className="font-medium">Feed Requested:</span> {subwayStatus.feed_id_requested}
+              </p>
+              <p>
+                <span className="font-medium">Feed Timestamp:</span> {
+                  /* Convert Unix timestamp to readable date/time */
+                  new Date(subwayStatus.feed_timestamp * 1000).toLocaleString()
+                }
+              </p>
+              <p>
+                <span className="font-medium">Updates Processed:</span> {subwayStatus.trip_updates_processed}
+              </p>
+              <p>
+                <span className="font-medium">Alerts Processed:</span> {subwayStatus.alerts_processed}
+              </p>
+              {/* You could add more details here if needed */}
+            </div>
+          )}
+           {/* Handle case where backend returned an error message */}
+           {subwayStatus && subwayStatus.error && (
+             <p className="text-red-600">Backend error: {subwayStatus.error}</p>
+           )}
+        </div>
+        {/* ----------------------------- */}
+
       </main>
 
       {/* Footer Section */}
       <footer className="bg-gray-800 text-white text-center p-3 mt-auto">
-        <p>&copy; {new Date().getFullYear()} NYC Transit Hub</p> {/* Dynamic year */}
+        <p>&copy; {new Date().getFullYear()} NYC Transit Hub</p>
       </footer>
     </div>
   );
